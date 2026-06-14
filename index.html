@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUXE MAISON — Luxury Redefined</title>
+<meta name="description" content="Premium watches, exclusive perfumes, luxury eyewear & natural products. Luxury redefined.">
+<meta name="theme-color" content="#0D0D0D">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💎</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --white:#FFFFFF;--black:#0D0D0D;--gold:#D4AF37;--deep:#1A1A1A;--silver:#F7F7F7;
+  --glass:rgba(255,255,255,0.04);--glass-border:rgba(255,255,255,0.08);
+  --font-body:'Inter',system-ui,-apple-system,sans-serif;
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-heading:'Montserrat','Inter',sans-serif;
+}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:var(--font-body);background:var(--black);color:var(--white);overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+::selection{background:var(--gold);color:var(--black)}
+img{display:block;max-width:100%;height:auto}
+a{text-decoration:none;color:inherit}
+button{border:none;background:none;cursor:pointer;font-family:inherit}
+
+/* ══════════ PRELOADER ══════════ */
+#loader{position:fixed;inset:0;z-index:999999;background:var(--black);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:28px;transition:opacity .7s,visibility .7s}
+#loader.gone{opacity:0;visibility:hidden;pointer-events:none}
+#loader .diamond{font-size:3rem;animation:loaderFloat 1.6s ease-in-out infinite}
+@keyframes loaderFloat{0%,100%{transform:translateY(0) scale(1);opacity:.7}50%{transform:translateY(-14px) scale(1.08);opacity:1}}
+#loader .loader-bar{width:180px;height:2px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
+#loader .loader-fill{height:100%;background:linear-gradient(90deg,var(--gold),#f5d77a);border-radius:2px;animation:loaderGo 1.6s ease-in-out forwards}
+@keyframes loaderGo{0%{width:0}60%{width:70%}100%{width:100%}}
+#loader span{font-size:.65rem;letter-spacing:.35em;text-transform:uppercase;color:rgba(255,255,255,.35);font-weight:500}
+
+/* ══════════ CURSOR ══════════ */
+.cur-glow{position:fixed;width:320px;height:320px;border-radius:50%;pointer-events:none;z-index:99990;background:radial-gradient(circle,rgba(212,175,55,.06) 0%,transparent 70%);transform:translate(-50%,-50%);transition:opacity .4s}
+@media(max-width:1024px){.cur-glow{display:none}}
+
+/* ══════════ NAVBAR ══════════ */
+#nav{position:fixed;top:0;left:0;right:0;z-index:9999;padding:18px 0;transition:all .45s cubic-bezier(.4,0,.2,1)}
+#nav.scrolled{padding:10px 0;background:rgba(13,13,13,.88);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-bottom:1px solid rgba(255,255,255,.04)}
+.nav-inner{max-width:1400px;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:between}
+.nav-logo{font-family:var(--font-heading);font-weight:800;font-size:1.15rem;letter-spacing:.22em;text-transform:uppercase;color:var(--white);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nav-logo i{color:var(--gold);font-style:normal}
+.nav-links{display:flex;align-items:center;gap:32px;margin-left:auto}
+.nav-links a{font-size:.72rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.6);position:relative;padding:6px 0;transition:color .3s}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--gold);transition:width .35s cubic-bezier(.4,0,.2,1)}
+.nav-links a:hover{color:var(--gold)}
+.nav-links a:hover::after{width:100%}
+.mob-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;z-index:10001}
+.mob-toggle span{width:24px;height:1.5px;background:var(--white);transition:all .35s;display:block;border-radius:1px}
+.mob-toggle.on span:nth-child(1){transform:rotate(45deg) translate(4px,5px)}
+.mob-toggle.on span:nth-child(2){opacity:0;transform:scaleX(0)}
+.mob-toggle.on span:nth-child(3){transform:rotate(-45deg) translate(4px,-5px)}
+@media(max-width:1024px){
+  .mob-toggle{display:flex}
+  .nav-links{position:fixed;inset:0;background:rgba(13,13,13,.97);backdrop-filter:blur(30px);flex-direction:column;justify-content:center;gap:24px;opacity:0;visibility:hidden;transition:all .4s}
+  .nav-links.on{opacity:1;visibility:visible}
+  .nav-links a{font-size:1.2rem;letter-spacing:.12em}
+}
+
+/* ══════════ HERO ══════════ */
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--black)}
+.hero-bg{position:absolute;inset:0}
+.hero-bg video{width:100%;height:100%;object-fit:cover;opacity:.18}
+.hero-gradient{position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,13,13,.3) 0%,rgba(13,13,13,.6) 40%,rgba(13,13,13,.95) 100%)}
+.hero-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.h-particle{position:absolute;width:2px;height:2px;background:var(--gold);border-radius:50%;opacity:0}
+.hero-glow-orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none}
+.hero-content{position:relative;z-index:10;text-align:center;max-width:900px;padding:0 24px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 22px;border:1px solid rgba(212,175,55,.2);border-radius:100px;margin-bottom:32px;font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(212,175,55,.8);font-weight:500;backdrop-filter:blur(10px);background:rgba(212,175,55,.04)}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);animation:badgePulse 2s ease-in-out infinite}
+@keyframes badgePulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+.hero-title{font-family:var(--font-display);font-size:clamp(2.8rem,7vw,6.5rem);font-weight:700;line-height:1.05;letter-spacing:-.01em;margin-bottom:24px;background:linear-gradient(135deg,var(--white) 0%,rgba(255,255,255,.7) 50%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-family:var(--font-body);font-size:clamp(.88rem,1.5vw,1.15rem);font-weight:300;line-height:1.8;color:rgba(255,255,255,.45);max-width:620px;margin:0 auto 44px;letter-spacing:.02em}
+.hero-btns{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.btn-lux{display:inline-flex;align-items:center;gap:10px;padding:15px 38px;font-size:.7rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;border-radius:0;position:relative;overflow:hidden;transition:all .4s cubic-bezier(.4,0,.2,1)}
+.btn-lux span,.btn-lux svg{position:relative;z-index:2}
+.btn-gold{background:var(--gold);color:var(--black);border:1px solid var(--gold)}
+.btn-gold::before{content:'';position:absolute;inset:0;background:var(--white);transform:translateY(101%);transition:transform .4s cubic-bezier(.4,0,.2,1);z-index:1}
+.btn-gold:hover::before{transform:translateY(0)}
+.btn-gold:hover{color:var(--black)}
+.btn-outline{border:1px solid rgba(255,255,255,.2);color:var(--white);background:rgba(255,255,255,.03);backdrop-filter:blur(8px)}
+.btn-outline::before{content:'';position:absolute;inset:0;background:var(--gold);transform:translateY(101%);transition:transform .4s cubic-bezier(.4,0,.2,1);z-index:1}
+.btn-outline:hover::before{transform:translateY(0)}
+.btn-outline:hover{color:var(--black);border-color:var(--gold)}
+.hero-scroll{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;z-index:10}
+.hero-scroll .line{width:1px;height:44px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollLine 2s ease-in-out infinite}
+@keyframes scrollLine{0%,100%{opacity:.4;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.2)}}
+.hero-scroll span{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.25)}
+
+/* ══════════ SECTION SYSTEM ══════════ */
+.section{padding:120px 0;position:relative;overflow:hidden}
+@media(max-width:768px){.section{padding:80px 0}}
+.container{max-width:1300px;margin:0 auto;padding:0 24px}
+.sec-badge{display:inline-flex;align-items:center;gap:8px;font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:16px}
+.sec-badge::before{content:'';width:28px;height:1px;background:var(--gold)}
+.sec-title{font-family:var(--font-display);font-size:clamp(2rem,4.5vw,3.6rem);font-weight:700;line-height:1.1;margin-bottom:16px}
+.sec-sub{font-size:1rem;font-weight:300;color:rgba(255,255,255,.4);max-width:550px;line-height:1.7}
+.sec-sub.dark{color:rgba(13,13,13,.45)}
+.sec-title.dark{color:var(--black)}
+.sec-badge.dark{color:var(--gold)}
+.sec-badge.dark::before{background:var(--gold)}
+
+/* ══════════ WATCHES ══════════ */
+#watches{background:var(--black)}
+.watches-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-top:60px}
+@media(min-width:1024px){.watches-grid{grid-template-columns:repeat(5,1fr);gap:16px}}
+@media(max-width:768px){.watches-grid{grid-template-columns:repeat(2,1fr);gap:12px}}
+.watch-card{position:relative;border-radius:14px;overflow:hidden;background:var(--deep);border:1px solid rgba(255,255,255,.04);transition:all .5s cubic-bezier(.4,0,.2,1);cursor:pointer;group:true}
+.watch-card::before{content:'';position:absolute;inset:0;border-radius:14px;border:1px solid transparent;background:linear-gradient(135deg,rgba(212,175,55,.3),transparent 50%,rgba(212,175,55,.15)) border-box;-webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .5s;z-index:2;pointer-events:none}
+.watch-card:hover::before{opacity:1}
+.watch-card:hover{transform:translateY(-8px);box-shadow:0 30px 60px rgba(0,0,0,.4),0 0 40px rgba(212,175,55,.06)}
+.watch-img{position:relative;aspect-ratio:1/1;overflow:hidden;background:linear-gradient(145deg,#111,#1a1a1a)}
+.watch-img img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.4,0,.2,1)}
+.watch-card:hover .watch-img img{transform:scale(1.08)}
+.watch-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top,rgba(26,26,26,.9),transparent);pointer-events:none}
+.watch-reflect{position:absolute;top:-80%;left:-50%;width:200%;height:80%;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.03),transparent);transform:rotate(-35deg);transition:top .7s;pointer-events:none;z-index:1}
+.watch-card:hover .watch-reflect{top:120%}
+.watch-body{padding:18px 16px 20px;position:relative;z-index:3}
+.watch-name{font-family:var(--font-heading);font-size:.78rem;font-weight:600;letter-spacing:.08em;color:var(--white);margin-bottom:6px;text-transform:uppercase}
+.watch-price{font-size:.72rem;color:var(--gold);font-weight:500;letter-spacing:.05em;margin-bottom:14px}
+.watch-buy{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;background:transparent;border:1px solid rgba(212,175,55,.25);color:var(--gold);font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;transition:all .3s;width:100%;justify-content:center;border-radius:4px}
+.watch-buy:hover{background:var(--gold);color:var(--black);border-color:var(--gold)}
+
+/* ══════════ PERFUMES ══════════ */
+#perfumes{background:var(--black);position:relative}
+.perfume-glow{position:absolute;width:500px;height:500px;border-radius:50%;filter:blur(150px);pointer-events:none}
+.perfume-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:40px;margin-top:60px}
+@media(max-width:700px){.perfume-grid{grid-template-columns:1fr;gap:28px}}
+.perfume-card{position:relative;border-radius:20px;overflow:hidden;background:linear-gradient(145deg,rgba(26,26,26,1),rgba(20,20,20,1));border:1px solid rgba(255,255,255,.05);transition:all .5s cubic-bezier(.4,0,.2,1)}
+.perfume-card:hover{transform:translateY(-6px);box-shadow:0 30px 70px rgba(0,0,0,.5),0 0 50px rgba(212,175,55,.04)}
+.perfume-img{position:relative;aspect-ratio:4/5;overflow:hidden}
+.perfume-img img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.4,0,.2,1)}
+.perfume-card:hover .perfume-img img{transform:scale(1.05)}
+.perfume-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(13,13,13,.85) 0%,transparent 50%);pointer-events:none}
+.perfume-img .perfume-light{position:absolute;top:-30%;left:30%;width:40%;height:80%;background:radial-gradient(ellipse,rgba(212,175,55,.08),transparent);filter:blur(40px);pointer-events:none;transition:opacity .5s}
+.perfume-card:hover .perfume-light{opacity:1.5}
+.perfume-info{position:absolute;bottom:0;left:0;right:0;padding:30px 28px;z-index:3}
+.perfume-name{font-family:var(--font-display);font-size:1.6rem;font-weight:600;color:var(--white);margin-bottom:6px}
+.perfume-desc{font-size:.82rem;color:rgba(255,255,255,.4);font-weight:300;line-height:1.6;margin-bottom:18px}
+.perfume-price{font-size:.9rem;color:var(--gold);font-weight:600;margin-bottom:18px;letter-spacing:.05em}
+.perfume-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 30px;border:1px solid rgba(212,175,55,.3);color:var(--gold);font-size:.65rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;transition:all .35s;border-radius:4px;background:rgba(212,175,55,.05);backdrop-filter:blur(10px)}
+.perfume-btn:hover{background:var(--gold);color:var(--black);border-color:var(--gold)}
+
+/* ══════════ EYEWEAR ══════════ */
+#eyewear{background:var(--silver)}
+.eye-showcase{margin-top:60px;position:relative;border-radius:24px;overflow:hidden;background:var(--white);box-shadow:0 40px 80px rgba(0,0,0,.06)}
+.eye-showcase img{width:100%;height:auto;max-height:600px;object-fit:cover;transition:transform .8s cubic-bezier(.4,0,.2,1)}
+.eye-showcase:hover img{transform:scale(1.03)}
+.eye-overlay{position:absolute;inset:0;display:flex;align-items:flex-end;padding:50px;background:linear-gradient(to top,rgba(13,13,13,.7) 0%,transparent 45%)}
+@media(max-width:768px){.eye-overlay{padding:24px;align-items:flex-end}}
+.eye-info{max-width:500px}
+.eye-info h3{font-family:var(--font-display);font-size:clamp(1.5rem,3vw,2.4rem);font-weight:700;color:var(--white);margin-bottom:10px}
+.eye-info p{font-size:.9rem;color:rgba(255,255,255,.6);font-weight:300;line-height:1.6;margin-bottom:22px}
+.eye-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 36px;background:var(--gold);color:var(--black);font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;transition:all .35s;border-radius:4px}
+.eye-btn:hover{background:var(--white);box-shadow:0 12px 30px rgba(0,0,0,.15)}
+
+/* ══════════ NATURAL PRODUCTS ══════════ */
+#natural{background:var(--white)}
+.nat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px;margin-top:60px}
+@media(max-width:700px){.nat-grid{grid-template-columns:1fr;gap:20px}}
+.nat-card{border-radius:18px;overflow:hidden;background:var(--silver);border:1px solid rgba(0,0,0,.04);transition:all .5s cubic-bezier(.4,0,.2,1);cursor:pointer}
+.nat-card:hover{transform:translateY(-6px);box-shadow:0 24px 50px rgba(0,0,0,.08)}
+.nat-img{aspect-ratio:4/3.5;overflow:hidden}
+.nat-img img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.4,0,.2,1)}
+.nat-card:hover .nat-img img{transform:scale(1.06)}
+.nat-body{padding:24px}
+.nat-name{font-family:var(--font-heading);font-size:1rem;font-weight:700;color:var(--black);margin-bottom:6px;letter-spacing:.03em}
+.nat-desc{font-size:.82rem;color:rgba(13,13,13,.45);font-weight:400;line-height:1.6;margin-bottom:16px}
+.nat-buy{display:inline-flex;align-items:center;gap:7px;padding:11px 28px;background:var(--black);color:var(--white);font-size:.62rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;transition:all .3s;border-radius:6px}
+.nat-buy:hover{background:var(--gold);color:var(--black)}
+
+/* ══════════ WHY US ══════════ */
+#whyus{background:var(--deep)}
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:60px}
+@media(max-width:600px){.why-grid{grid-template-columns:repeat(2,1fr);gap:14px}}
+.why-card{padding:36px 24px;border-radius:16px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);text-align:center;transition:all .45s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+.why-card::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:2px;background:var(--gold);transition:width .4s cubic-bezier(.4,0,.2,1)}
+.why-card:hover{transform:translateY(-4px);background:rgba(255,255,255,.04);border-color:rgba(212,175,55,.12)}
+.why-card:hover::after{width:40px}
+.why-icon{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,rgba(212,175,55,.12),rgba(212,175,55,.04));display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:1.3rem}
+.why-title{font-family:var(--font-heading);font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--white);margin-bottom:8px}
+.why-desc{font-size:.76rem;color:rgba(255,255,255,.35);font-weight:300;line-height:1.6}
+
+/* ══════════ REVIEWS ══════════ */
+#reviews{background:var(--black)}
+.reviews-track{display:flex;gap:20px;margin-top:60px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:12px;scrollbar-width:none}
+.reviews-track::-webkit-scrollbar{display:none}
+.rev-card{min-width:340px;max-width:380px;flex-shrink:0;scroll-snap-align:start;padding:36px 30px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);backdrop-filter:blur(10px);transition:all .4s}
+@media(max-width:500px){.rev-card{min-width:280px;padding:28px 22px}}
+.rev-card:hover{border-color:rgba(212,175,55,.15);transform:translateY(-3px)}
+.rev-stars{display:flex;gap:3px;margin-bottom:18px}
+.rev-stars span{color:var(--gold);font-size:.9rem}
+.rev-text{font-size:.88rem;font-weight:300;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:22px;font-style:italic}
+.rev-author{display:flex;align-items:center;gap:12px}
+.rev-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#c9952a);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;color:var(--black)}
+.rev-name{font-weight:600;font-size:.82rem;color:var(--white)}
+.rev-tag{font-size:.68rem;color:rgba(255,255,255,.3);font-weight:400}
+
+/* ══════════ FOOTER ══════════ */
+#footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.04);padding:80px 0 30px}
+.foot-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:60px}
+@media(max-width:768px){.foot-top{grid-template-columns:1fr 1fr;gap:28px}}
+@media(max-width:500px){.foot-top{grid-template-columns:1fr}}
+.foot-brand{font-family:var(--font-heading);font-weight:800;font-size:1.1rem;letter-spacing:.22em;text-transform:uppercase;margin-bottom:16px}
+.foot-desc{font-size:.82rem;color:rgba(255,255,255,.35);line-height:1.7;max-width:340px;margin-bottom:20px}
+.foot-socials{display:flex;gap:10px}
+.foot-socials a{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;transition:all .3s;font-size:.8rem}
+.foot-socials a:hover{border-color:var(--gold);background:rgba(212,175,55,.08);color:var(--gold)}
+.foot-heading{font-family:var(--font-heading);font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--white);margin-bottom:18px}
+.foot-links{list-style:none;display:flex;flex-direction:column;gap:10px}
+.foot-links a{font-size:.8rem;color:rgba(255,255,255,.4);transition:color .3s}
+.foot-links a:hover{color:var(--gold)}
+.foot-bottom{text-align:center;padding-top:28px;border-top:1px solid rgba(255,255,255,.04)}
+.foot-bottom p{font-size:.7rem;color:rgba(255,255,255,.2);letter-spacing:.05em}
+
+/* ══════════ WHATSAPP FLOAT ══════════ */
+.wa-btn{position:fixed;bottom:28px;right:28px;z-index:9990;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.35);transition:all .35s;animation:waPulse 2.5s ease-in-out infinite}
+.wa-btn:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(37,211,102,.5)}
+@keyframes waPulse{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.35)}50%{box-shadow:0 4px 20px rgba(37,211,102,.5),0 0 0 12px rgba(37,211,102,.06)}}
+
+/* ══════════ ANIMATION HELPERS ══════════ */
+.a-up{opacity:0;transform:translateY(40px)}
+.a-left{opacity:0;transform:translateX(-40px)}
+.a-scale{opacity:0;transform:scale(.92)}
+</style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div id="loader">
+  <div class="diamond">💎</div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+  <span>Loading Luxury</span>
+</div>
+
+<!-- CURSOR GLOW -->
+<div class="cur-glow" id="curGlow"></div>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/96171005742" target="_blank" class="wa-btn" aria-label="WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- NAVBAR -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo"><i>◆</i> LUXE MAISON</a>
+    <div class="nav-links" id="navLinks">
+      <a href="#hero" onclick="closeNav()">Home</a>
+      <a href="#watches" onclick="closeNav()">Watches</a>
+      <a href="#perfumes" onclick="closeNav()">Perfumes</a>
+      <a href="#eyewear" onclick="closeNav()">Eyeglasses</a>
+      <a href="#natural" onclick="closeNav()">Natural</a>
+      <a href="#whyus" onclick="closeNav()">About</a>
+      <a href="#footer" onclick="closeNav()">Contact</a>
+    </div>
+    <div class="mob-toggle" id="mobToggle" onclick="toggleNav()"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg">
+    <video autoplay muted loop playsinline poster="https://i.imgur.com/VKcNlq5.jpeg">
+      <source src="" type="video/mp4">
+    </video>
+    <div class="hero-gradient"></div>
+  </div>
+  <div class="hero-glow-orb" style="width:600px;height:600px;background:rgba(212,175,55,.04);top:-200px;right:-150px;"></div>
+  <div class="hero-glow-orb" style="width:400px;height:400px;background:rgba(212,175,55,.03);bottom:-100px;left:-100px;"></div>
+  <div class="hero-particles" id="heroParts"></div>
+  <div class="hero-content" id="heroContent">
+    <div class="hero-badge">Established 2024 — Premium Collection</div>
+    <h1 class="hero-title">Luxury<br>Redefined</h1>
+    <p class="hero-sub">Premium Watches, Exclusive Perfumes, Luxury Eyewear & Natural Products — Delivered Directly To You.</p>
+    <div class="hero-btns">
+      <a href="#watches" class="btn-lux btn-gold"><span>Shop Collection</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="https://wa.me/96171005742" target="_blank" class="btn-lux btn-outline"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg><span>WhatsApp</span></a>
+    </div>
+  </div>
+  <div class="hero-scroll"><div class="line"></div><span>Scroll</span></div>
+</section>
+
+<!-- WATCHES -->
+<section class="section" id="watches">
+  <div class="container">
+    <div class="a-up">
+      <div class="sec-badge">Timepieces</div>
+      <h2 class="sec-title">Watch Collection</h2>
+      <p class="sec-sub">Curated luxury timepieces for the distinguished connoisseur.</p>
+    </div>
+    <div class="watches-grid" id="watchGrid">
+      <div class="watch-card a-up"><div class="watch-img"><img src="https://i.imgur.com/VKcNlq5.jpeg" alt="Luxury Watch" loading="lazy"><div class="watch-reflect"></div></div><div class="watch-body"><div class="watch-name">Royal Chronograph</div><div class="watch-price">$2,450</div><a href="https://wa.me/96171005742?text=Hi%2C%20I%27m%20interested%20in%20the%20Royal%20Chronograph%20watch" target="_blank" class="watch-buy">Buy on WhatsApp</a></div></div>
+      <div class="watch-card a-up"><div class="watch-img"><img src="https://i.imgur.com/T8eKzGA.jpeg" alt="Luxury Watch" loading="lazy"><div class="watch-reflect"></div></div><div class="watch-body"><div class="watch-name">Midnight Elite</div><div class="watch-price">$1,890</div><a href="https://wa.me/96171005742?text=Hi%2C%20I%27m%20interested%20in%20the%20Midnight%20Elite%20watch" target="_blank" class="watch-buy">Buy on WhatsApp</a></div></div>
+      <div class="watch-card a-up"><div class="watch-img"><img src="https://i.imgur.com/7cQCzHr.jpeg" alt="Luxury Watch" loading="lazy"><div class="watch-reflect"></div></div><div class="watch-body"><div class="watch-name">Grand Heritage</div><div class="watch-price">$3,200</div><a href="https://wa.me/96171005742?text=Hi%2C%20I%27m%20interested%20in%20the%20Grand%20Heritage%20watch" target="_blank" class="watch-buy">Buy on WhatsApp</a></div></div>
+      <div class="watch-card a-up"><div class="watch-img"><img src="https://i.imgur.com/CbZF34n.jpeg" alt="Luxury Watch" loading="lazy"><div class="watch-reflect"></div></div><div class="watch-body"><div class="watch-name">Prestige Gold</div><div class="watch-price">$4,100</div><a href="https://wa.me/96171005742?text=Hi%2C%20I%27m%20interested%20in%20the%20Prestige%20Gold%20watch" target="_blank" class="watch-buy">Buy on WhatsApp</a></div></div>
+      <div class="watch-card a-up"><div class="watch-img"><img src="https://i.imgur.com/TmHiuDS.jpeg" alt="Luxury Watch" loading="lazy"><div class="watch-reflect"></div></div><div class="watch-body"><div class="watch-name">Sovereign Black</div><div class="watch-price">$2,750</div><a href="https://wa.me/96171005742?text=Hi%2C%20I%27m%20interested%20in%20the%20Sovereign%20Black%20watch" target="_blank" class="watch-buy">Buy on WhatsApp</a></div></div>
+      <div class="watch-card a-up"><div class="watch-img"><img src="https://i.imgur.com/6ZMriam.jpeg" alt="Luxury Watch" loading="lazy"><div class="watch-reflect"></div></div><div class="watch-body"><div class="watch-name">Monaco Sport</div><div class="watch-price">$1,650</div><a href="https://wa.me/96171005742?text=Hi%2C%20I%27m%20interested%20in%20the%20Monaco%20Sport%20watch" target="_blank" class="watch-buy">Buy on WhatsApp</a></div></div>
+      <div class="watch-card a-up"><div class="watch-img"><img src="https://i.imgur.com/ErJQxAZ.jpeg" alt="Luxury Watch" loading="lazy"><div class="watch-reflect"></div></div><div class="watch-body"><div class="watch-name">Imperial Rose</div><div class="watch-price">$5,400</div><a href="https://wa.me/96171005742?text=Hi%2C%20I%27m%20interested%20in%20the%20Imperial%20Rose%20watch" target="_blank" class="watch-buy">Buy on WhatsApp</a></div></div>
+      <div class="watch-card a-up"><div class="watch-img"><img src="https://i.imgur.com/BXavrfr.jpeg" alt="Luxury Watch" loading="lazy"><div class="watch-reflect"></div></div><div class="watch-body"><div class="watch-name">Aviator Pro</div><div class="watch-price">$2,100</div><a href="https://wa.me/96171005742?text=Hi%2C%20I%27m%20interested%20in%20the%20Aviator%20Pro%20watch" target="_blank" class="watch-buy">Buy on WhatsApp</a></div></div>
+      <div class="watch-card a-up"><div class="watch-img"><img src="https://i.imgur.com/awi6WkC.jpeg" alt="Luxury Watch" loading="lazy"><div class="watch-reflect"></div></div><div class="watch-body"><div class="watch-name">Nautilus Diver</div><div class="watch-price">$3,650</div><a href="https://wa.me/96171005742?text=Hi%2C%20I%27m%20interested%20in%20the%20Nautilus%20Diver%20watch" target="_blank" class="watch-buy">Buy on WhatsApp</a></div></div>
+      <div class="watch-card a-up"><div class="watch-img"><img src="https://i.imgur.com/V296jQL.jpeg" alt="Luxury Watch" loading="lazy"><div class="watch-reflect"></div></div><div class="watch-body"><div class="watch-name">Diamond Edition</div><div class="watch-price">$7,800</div><a href="https://wa.me/96171005742?text=Hi%2C%20I%27m%20interested%20in%20the%20Diamond%20Edition%20watch" target="_blank" class="watch-buy">Buy on WhatsApp</a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PERFUMES -->
+<section class="section" id="perfumes">
+  <div class="perfume-glow" style="top:-100px;right:-150px;background:rgba(212,175,55,.03);"></div>
+  <div class="perfume-glow" style="bottom:-100px;left:-100px;background:rgba(100,60,20,.04);"></div>
+  <div class="container">
+    <div class="a-up">
+      <div class="sec-badge">Fragrances</div>
+      <h2 class="sec-title">Exclusive Perfumes</h2>
+      <p class="sec-sub">Captivating scents crafted for the extraordinary.</p>
+    </div>
+    <div class="perfume-grid">
+      <div class="perfume-card a-up">
+        <div class="perfume-img">
+          <img src="https://i.imgur.com/WLGGwrN.jpeg" alt="Luxury Perfume" loading="lazy">
+          <div class="perfume-light"></div>
+        </div>
+        <div class="perfume-info">
+          <div class="perfume-name">Noir Élégance</div>
+          <p class="perfume-desc">A bold symphony of oud, amber, and dark vanilla. Unforgettable presence for the modern gentleman.</p>
+          <div class="perfume-price">$320</div>
+          <a href="https://wa.me/96171005742?text=Hi%2C%20I%27m%20interested%20in%20Noir%20%C3%89l%C3%A9gance%20perfume" target="_blank" class="perfume-btn">Order on WhatsApp</a>
+        </div>
+      </div>
+      <div class="perfume-card a-up">
+        <div class="perfume-img">
+          <img src="https://i.imgur.com/vHYInTb.jpeg" alt="Luxury Perfume" loading="lazy">
+          <div class="perfume-light"></div>
+        </div>
+        <div class="perfume-info">
+          <div class="perfume-name">Rose Impériale</div>
+          <p class="perfume-desc">Delicate Bulgarian rose with hints of saffron and white musk. Timeless feminine elegance.</p>
+          <div class="perfume-price">$285</div>
+          <a href="https://wa.me/96171005742?text=Hi%2C%20I%27m%20interested%20in%20Rose%20Imp%C3%A9riale%20perfume" target="_blank" class="perfume-btn">Order on WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EYEWEAR -->
+<section class="section" id="eyewear">
+  <div class="container">
+    <div class="a-up">
+      <div class="sec-badge dark">Eyewear</div>
+      <h2 class="sec-title dark">Luxury Eyeglasses</h2>
+      <p class="sec-sub dark">Precision-crafted frames that define your vision.</p>
+    </div>
+    <div class="eye-showcase a-scale">
+      <img src="https://i.imgur.com/hRpJJNd.jpeg" alt="Luxury Eyeglasses" loading="lazy">
+      <div class="eye-overlay">
+        <div class="eye-info">
+          <h3>Designer Collection</h3>
+          <p>Premium eyewear blending Italian craftsmanship with contemporary design. UV protection meets luxury aesthetics.</p>
+          <a href="https://wa.me/96171005742?text=Hi%2C%20I%27m%20interested%20in%20your%20luxury%20eyewear%20collection" target="_blank" class="eye-btn">Order Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NATURAL PRODUCTS -->
+<section class="section" id="natural">
+  <div class="container">
+    <div class="a-up">
+      <div class="sec-badge dark">Nature</div>
+      <h2 class="sec-title dark">Natural Products</h2>
+      <p class="sec-sub dark">Pure ingredients. Premium wellness. Nature's finest.</p>
+    </div>
+    <div class="nat-grid">
+      <div class="nat-card a-up">
+        <div class="nat-img"><img src="https://i.imgur.com/VKXh7eh.jpeg" alt="Natural Product" loading="lazy"></div>
+        <div class="nat-body">
+          <div class="nat-name">Royal Honey Blend</div>
+          <p class="nat-desc">Organic raw honey enriched with premium botanicals. Nature's purest energy source for vitality and wellness.</p>
+          <a href="https://wa.me/96171005742?text=Hi%2C%20I%27m%20interested%20in%20Royal%20Honey%20Blend" target="_blank" class="nat-buy">Buy Now</a>
+        </div>
+      </div>
+      <div class="nat-card a-up">
+        <div class="nat-img"><img src="https://i.imgur.com/LyDqFfL.jpeg" alt="Natural Product" loading="lazy"></div>
+        <div class="nat-body">
+          <div class="nat-name">Herbal Elixir</div>
+          <p class="nat-desc">Handcrafted herbal blend combining ancient remedies with modern science. Pure natural wellness in every drop.</p>
+          <a href="https://wa.me/96171005742?text=Hi%2C%20I%27m%20interested%20in%20Herbal%20Elixir" target="_blank" class="nat-buy">Buy Now</a>
+        </div>
+      </div>
+      <div class="nat-card a-up">
+        <div class="nat-img"><img src="https://i.imgur.com/V0jQl0U.jpeg" alt="Natural Product" loading="lazy"></div>
+        <div class="nat-body">
+          <div class="nat-name">Botanical Essence</div>
+          <p class="nat-desc">Premium botanical extract infused with rare natural compounds. Elevate your daily wellness ritual naturally.</p>
+          <a href="https://wa.me/96171005742?text=Hi%2C%20I%27m%20interested%20in%20Botanical%20Essence" target="_blank" class="nat-buy">Buy Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="section" id="whyus">
+  <div class="container">
+    <div class="a-up" style="text-align:center;margin-bottom:20px">
+      <div class="sec-badge" style="justify-content:center">The Experience</div>
+      <h2 class="sec-title">Why Choose Us</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card a-up"><div class="why-icon">✦</div><div class="why-title">Premium Quality</div><p class="why-desc">Only authentic luxury products sourced from trusted international brands.</p></div>
+      <div class="why-card a-up"><div class="why-icon">⚡</div><div class="why-title">Fast Delivery</div><p class="why-desc">Swift delivery across Lebanon. Your luxury arrives at your door.</p></div>
+      <div class="why-card a-up"><div class="why-icon">🛡️</div><div class="why-title">Trusted Store</div><p class="why-desc">Hundreds of satisfied customers trust us for their premium purchases.</p></div>
+      <div class="why-card a-up"><div class="why-icon">🎁</div><div class="why-title">Luxury Packaging</div><p class="why-desc">Every order arrives in premium gift-worthy packaging.</p></div>
+      <div class="why-card a-up"><div class="why-icon">🔒</div><div class="why-title">Secure Purchase</div><p class="why-desc">Safe and private transactions via WhatsApp Business.</p></div>
+      <div class="why-card a-up"><div class="why-icon">💬</div><div class="why-title">24/7 Support</div><p class="why-desc">Dedicated customer service ready to assist you anytime.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="section" id="reviews">
+  <div class="container">
+    <div class="a-up">
+      <div class="sec-badge">Reviews</div>
+      <h2 class="sec-title">What Clients Say</h2>
+      <p class="sec-sub">Real reviews from our valued customers.</p>
+    </div>
+    <div class="reviews-track">
+      <div class="rev-card"><div class="rev-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="rev-text">"Amazing quality and very premium products. The watch exceeded all my expectations. Truly luxury!"</p><div class="rev-author"><div class="rev-avatar">AK</div><div><div class="rev-name">Ahmad K.</div><div class="rev-tag">Verified Buyer</div></div></div></div>
+      <div class="rev-card"><div class="rev-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="rev-text">"Fast delivery and excellent service. The perfume is absolutely divine. Best online luxury store in Lebanon!"</p><div class="rev-author"><div class="rev-avatar">SM</div><div><div class="rev-name">Sarah M.</div><div class="rev-tag">Verified Buyer</div></div></div></div>
+      <div class="rev-card"><div class="rev-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="rev-text">"Best online store experience. Premium packaging, authentic products, and the WhatsApp support is incredible."</p><div class="rev-author"><div class="rev-avatar">MR</div><div><div class="rev-name">Mohammad R.</div><div class="rev-tag">Verified Buyer</div></div></div></div>
+      <div class="rev-card"><div class="rev-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="rev-text">"The eyeglasses collection is stunning. Received my order in perfect condition with beautiful luxury packaging."</p><div class="rev-author"><div class="rev-avatar">LH</div><div><div class="rev-name">Lara H.</div><div class="rev-tag">Verified Buyer</div></div></div></div>
+      <div class="rev-card"><div class="rev-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="rev-text">"I've ordered three times now. Consistent quality, fast delivery, and the natural products are absolutely pure. Highly recommended!"</p><div class="rev-author"><div class="rev-avatar">JN</div><div><div class="rev-name">Jad N.</div><div class="rev-tag">Verified Buyer</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer">
+  <div class="container">
+    <div class="foot-top">
+      <div>
+        <div class="foot-brand">◆ LUXE MAISON</div>
+        <p class="foot-desc">Your destination for premium watches, exclusive perfumes, luxury eyewear, and natural products. Luxury redefined — delivered to you.</p>
+        <div class="foot-socials">
+          <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://facebook.com" target="_blank" aria-label="Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+          </a>
+          <a href="https://wa.me/96171005742" target="_blank" aria-label="WhatsApp">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <div class="foot-heading">Shop</div>
+        <ul class="foot-links">
+          <li><a href="#watches">Watches</a></li>
+          <li><a href="#perfumes">Perfumes</a></li>
+          <li><a href="#eyewear">Eyeglasses</a></li>
+          <li><a href="#natural">Natural Products</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-heading">Company</div>
+        <ul class="foot-links">
+          <li><a href="#whyus">About Us</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+          <li><a href="https://wa.me/96171005742" target="_blank">Support</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-heading">Contact</div>
+        <ul class="foot-links">
+          <li><a href="tel:+96171005742">+961 71 005 742</a></li>
+          <li><a href="https://wa.me/96171005742" target="_blank">WhatsApp Chat</a></li>
+          <li><a href="https://instagram.com" target="_blank">Instagram</a></li>
+          <li><a href="https://facebook.com" target="_blank">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p>© 2025 LUXE MAISON. All rights reserved. Luxury Redefined.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+/* ═══ PRELOADER ═══ */
+let started=false;
+function boot(){if(started)return;started=true;document.getElementById('loader').classList.add('gone');setTimeout(runGSAP,400)}
+window.addEventListener('load',()=>setTimeout(boot,1700));
+setTimeout(boot,3500);
+
+/* ═══ NAV ═══ */
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',scrollY>60)},{passive:true});
+window.toggleNav=function(){document.getElementById('navLinks').classList.toggle('on');document.getElementById('mobToggle').classList.toggle('on');document.body.style.overflow=document.getElementById('navLinks').classList.contains('on')?'hidden':''};
+window.closeNav=function(){document.getElementById('navLinks').classList.remove('on');document.getElementById('mobToggle').classList.remove('on');document.body.style.overflow=''};
+
+/* ═══ SMOOTH SCROLL ═══ */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)window.scrollTo({top:t.offsetTop-70,behavior:'smooth'})})});
+
+/* ═══ CURSOR GLOW ═══ */
+const glow=document.getElementById('curGlow');
+let mx=0,my=0,gx=0,gy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function animGlow(){gx+=(mx-gx)*.08;gy+=(my-gy)*.08;glow.style.left=gx+'px';glow.style.top=gy+'px';requestAnimationFrame(animGlow)})();
+
+/* ═══ HERO PARTICLES ═══ */
+const pc=document.getElementById('heroParts');
+for(let i=0;i<35;i++){const d=document.createElement('div');d.className='h-particle';d.style.left=Math.random()*100+'%';d.style.top=Math.random()*100+'%';d.style.width=(1.5+Math.random()*2.5)+'px';d.style.height=d.style.width;pc.appendChild(d)}
+
+/* ═══ GSAP ═══ */
+function runGSAP(){
+gsap.registerPlugin(ScrollTrigger);
+
+// Hero entrance
+const ht=gsap.timeline({defaults:{ease:'power3.out'}});
+ht.fromTo('.hero-badge',{y:25,opacity:0},{y:0,opacity:1,duration:.7,delay:.1})
+  .fromTo('.hero-title',{y:50,opacity:0},{y:0,opacity:1,duration:1},'-=.4')
+  .fromTo('.hero-sub',{y:30,opacity:0},{y:0,opacity:1,duration:.75},'-=.5')
+  .fromTo('.hero-btns',{y:20,opacity:0},{y:0,opacity:1,duration:.6},'-=.35')
+  .fromTo('.hero-scroll',{opacity:0},{opacity:1,duration:.5},'-=.2');
+
+// Hero parallax orbs
+gsap.to('.hero-glow-orb',{y:-80,scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:1.5}});
+
+// Particles
+document.querySelectorAll('.h-particle').forEach(p=>{
+  gsap.to(p,{y:-50-Math.random()*70,x:(Math.random()-.5)*30,opacity:.12+Math.random()*.2,duration:3+Math.random()*4,repeat:-1,yoyo:true,ease:'sine.inOut',delay:Math.random()*3});
+});
+
+// Hero mouse parallax
+const heroEl=document.getElementById('hero');
+if(heroEl&&window.innerWidth>768){
+  heroEl.addEventListener('mousemove',e=>{
+    const r=heroEl.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5;
+    const y=(e.clientY-r.top)/r.height-.5;
+    gsap.to('.hero-glow-orb',{x:x*25,y:y*18,duration:1.2,ease:'power2.out',overwrite:'auto'});
+    gsap.to('.hero-content',{x:x*-8,y:y*-5,duration:1.5,ease:'power2.out',overwrite:'auto'});
+  });
+}
+
+// Scroll reveals
+['.a-up','.a-left','.a-scale'].forEach(cls=>{
+  gsap.utils.toArray(cls).forEach((el,i)=>{
+    const p={opacity:1,duration:.85,ease:'power3.out'};
+    if(cls==='.a-up')p.y=0;
+    if(cls==='.a-left')p.x=0;
+    if(cls==='.a-scale'){p.scale=1;p.duration=.7}
+    gsap.to(el,{...p,scrollTrigger:{trigger:el,start:'top 92%',toggleActions:'play none none none'},delay:i%5*.06});
+  });
+});
+
+// Watch cards batch
+ScrollTrigger.batch('.watch-card',{
+  onEnter:batch=>{gsap.to(batch,{opacity:1,y:0,stagger:.06,duration:.7,ease:'power3.out',overwrite:true})},
+  start:'top 94%'
+});
+
+// Perfume cards
+ScrollTrigger.batch('.perfume-card',{
+  onEnter:batch=>{gsap.to(batch,{opacity:1,y:0,stagger:.12,duration:.8,ease:'power3.out',overwrite:true})},
+  start:'top 90%'
+});
+
+// Natural cards
+ScrollTrigger.batch('.nat-card',{
+  onEnter:batch=>{gsap.to(batch,{opacity:1,y:0,stagger:.1,duration:.7,ease:'power3.out',overwrite:true})},
+  start:'top 92%'
+});
+
+// Why cards
+ScrollTrigger.batch('.why-card',{
+  onEnter:batch=>{gsap.to(batch,{opacity:1,y:0,stagger:.07,duration:.65,ease:'power3.out',overwrite:true})},
+  start:'top 90%'
+});
+
+// Review cards
+ScrollTrigger.batch('.rev-card',{
+  onEnter:batch=>{gsap.to(batch,{opacity:1,y:0,stagger:.1,duration:.7,ease:'power3.out',overwrite:true})},
+  start:'top 92%'
+});
+
+// Parallax blurs
+gsap.utils.toArray('.perfume-glow').forEach(el=>{
+  gsap.to(el,{y:-50,scrollTrigger:{trigger:el.parentElement,start:'top bottom',end:'bottom top',scrub:2}});
+});
+
+// Eyewear 3D tilt
+const eyeCase=document.querySelector('.eye-showcase');
+if(eyeCase&&window.innerWidth>768){
+  eyeCase.addEventListener('mousemove',e=>{
+    const r=eyeCase.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5;
+    const y=(e.clientY-r.top)/r.height-.5;
+    gsap.to(eyeCase,{rotateY:x*4,rotateX:y*-3,duration:.6,ease:'power2.out',transformPerspective:800});
+  });
+  eyeCase.addEventListener('mouseleave',()=>{
+    gsap.to(eyeCase,{rotateY:0,rotateX:0,duration:.8,ease:'power2.out'});
+  });
+}
+
+} // end runGSAP
+})();
+</script>
+</body>
+</html>
